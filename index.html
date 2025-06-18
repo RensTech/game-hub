@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RenGafun Hub - Collection of Fun Mini Games</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --accent: #fd79a8;
+            --success: #00b894;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .watermark {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .game-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .game-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .game-info {
+            padding: 1.5rem;
+        }
+        
+        .game-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .game-info p {
+            color: var(--dark);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .tag {
+            background: var(--secondary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .tag.single {
+            background: var(--success);
+        }
+        
+        .tag.multi {
+            background: var(--accent);
+        }
+        
+        .game-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .game-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--dark);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+        
+        .close-modal:hover {
+            background: var(--primary);
+            transform: rotate(90deg);
+        }
+        
+        .game-display {
+            margin-top: 1.5rem;
+        }
+        
+        /* Snake Game Styles */
+        #snake-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #snake-canvas {
+            border: 2px solid var(--dark);
+            background-color: #f8f9fa;
+        }
+        
+        .snake-controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .snake-controls button {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .snake-controls button:hover {
+            background: var(--secondary);
+        }
+        
+        .snake-score {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        /* Tic Tac Toe Styles */
+        #tic-tac-toe {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .tic-tac-toe-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            background: var(--dark);
+            margin: 1rem 0;
+        }
+        
+        .tic-tac-toe-cell {
+            width: 100px;
+            height: 100px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tic-tac-toe-cell:hover {
+            background: #f1f2f6;
+        }
+        
+        .tic-tac-toe-cell.x {
+            color: var(--primary);
+        }
+        
+        .tic-tac-toe-cell.o {
+            color: var(--accent);
+        }
+        
+        .tic-tac-toe-status {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+        
+        .tic-tac-toe-reset {
+            padding: 0.5rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tic-tac-toe-reset:hover {
+            background: var(--secondary);
+        }
+        
+        /* Memory Game Styles */
+        #memory-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 1rem auto;
+        }
+        
+        .memory-card {
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .memory-card.matched {
+            background: var(--success);
+            color: white;
+            border: none;
+            cursor: default;
+        }
+        
+        .memory-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .memory-stats div {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* Typing Game Styles */
+        #typing-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .typing-display {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            line-height: 1.6;
+            min-height: 120px;
+        }
+        
+        .typing-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 0.8rem;
+            font-size: 1.2rem;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .typing-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .typing-stats div {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .typing-correct {
+            color: var(--success);
+        }
+        
+        .typing-incorrect {
+            color: #d63031;
+            text-decoration: underline;
+        }
+        
+        /* Space Invaders Styles */
+        #space-invaders {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #space-canvas {
+            border: 2px solid var(--dark);
+            background-color: #111;
+        }
+        
+        .space-controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .space-controls button {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .space-controls button:hover {
+            background: var(--secondary);
+        }
+        
+        .space-score {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: white;
+            background: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        /* Hangman Styles */
+        #hangman-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .hangman-display {
+            font-size: 2rem;
+            letter-spacing: 0.5rem;
+            margin: 1rem 0;
+            min-height: 3rem;
+        }
+        
+        .hangman-image {
+            font-family: monospace;
+            white-space: pre;
+            margin: 1rem 0;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        .hangman-keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 500px;
+            margin: 1rem 0;
+        }
+        
+        .hangman-key {
+            width: 40px;
+            height: 40px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .hangman-key:hover:not(:disabled) {
+            background: var(--primary);
+        }
+        
+        .hangman-key:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .hangman-key.used.correct {
+            background: var(--success);
+        }
+        
+        .hangman-key.used.incorrect {
+            background: #d63031;
+        }
+        
+        .hangman-reset {
+            padding: 0.5rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+        
+        .hangman-reset:hover {
+            background: var(--secondary);
+        }
+        
+        /* Multiplayer Lobby */
+        .multiplayer-lobby {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .lobby-rooms {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 1rem 0;
+        }
+        
+        .room-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .room-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .room-card p {
+            font-size: 0.9rem;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .create-room {
+            padding: 0.8rem 1.5rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        
+        .create-room:hover {
+            background: #00a884;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .games-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tic-tac-toe-board {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+            }
+            
+            .tic-tac-toe-cell {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+            
+            .memory-board {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .memory-card {
+                width: 70px;
+                height: 70px;
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .games-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .tic-tac-toe-board {
+                grid-template-columns: repeat(3, 70px);
+                grid-template-rows: repeat(3, 70px);
+            }
+            
+            .tic-tac-toe-cell {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+            
+            .memory-board {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .memory-card {
+                width: 60px;
+                height: 60px;
+                font-size: 1.2rem;
+            }
+            
+            .hangman-key {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #d63031;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>GameHub</h1>
+        <div class="watermark">Created by Reno Budiman</div>
+        <p class="tagline">A collection of fun mini-games to play when you're bored. Play solo or challenge your friends!</p>
+    </header>
+    
+    <div class="games-container">
+        <!-- Snake Game -->
+        <div class="game-card" data-game="snake">
+            <img src="Snake.jpg" alt="Snake Game">
+            <div class="game-info">
+                <h3>Snake</h3>
+                <p>The classic snake game. Eat the food and grow as long as possible without hitting the walls or yourself.</p>
+                <div class="game-tags">
+                    <div class="tag single">Single Player</div>
+                    <div class="tag">Classic</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tic Tac Toe -->
+        <div class="game-card" data-game="tic-tac-toe">
+            <img src="TTT.jpg" alt="Tic Tac Toe">
+            <div class="game-info">
+                <h3>Tic Tac Toe</h3>
+                <p>The timeless 3-in-a-row game. Play against the computer or a friend in this strategic battle.</p>
+                <div class="game-tags">
+                    <div class="tag single">Single Player</div>
+                    <div class="tag multi">Multiplayer</div>
+                    <div class="tag">Strategy</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Memory Game -->
+        <div class="game-card" data-game="memory">
+            <img src="Memory.jpg" alt="Memory Game">
+            <div class="game-info">
+                <h3>Memory Cards</h3>
+                <p>Test your memory by matching pairs of cards. Find all matches with the fewest flips possible.</p>
+                <div class="game-tags">
+                    <div class="tag single">Single Player</div>
+                    <div class="tag">Memory</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Typing Game -->
+        <div class="game-card" data-game="typing">
+            <img src="Speed.jpg" alt="Typing Game">
+            <div class="game-info">
+                <h3>Speed Typing</h3>
+                <p>Test your typing speed and accuracy. Type the displayed text as quickly and accurately as possible.</p>
+                <div class="game-tags">
+                    <div class="tag single">Single Player</div>
+                    <div class="tag">Skill</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Space Invaders -->
+        <div class="game-card" data-game="space-invaders">
+            <img src="Space.jpg" alt="Space Invaders">
+            <div class="game-info">
+                <h3>Space Invaders</h3>
+                <p>The classic arcade shooter. Defend Earth from invading aliens and achieve the highest score.</p>
+                <div class="game-tags">
+                    <div class="tag single">Single Player</div>
+                    <div class="tag">Arcade</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hangman -->
+        <div class="game-card" data-game="hangman">
+            <img src="hangman.jpg" alt="Hangman">
+            <div class="game-info">
+                <h3>Hangman</h3>
+                <p>Guess the hidden word before the hangman is complete. Choose letters wisely!</p>
+                <div class="game-tags">
+                    <div class="tag single">Single Player</div>
+                    <div class="tag">Word</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Multiplayer Lobby -->
+        <div class="game-card" data-game="multiplayer">
+            <img src="Multi.jpg" alt="Multiplayer Games">
+            <div class="game-info">
+                <h3>Multiplayer Lobby</h3>
+                <p>Join or create rooms to play games with friends in real-time. Challenge others worldwide!</p>
+                <div class="game-tags">
+                    <div class="tag multi">Multiplayer</div>
+                    <div class="tag">Online</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Modals -->
+    <div class="game-modal" id="snake-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Snake Game</h2>
+            <div class="game-display" id="snake-game">
+                <canvas id="snake-canvas" width="400" height="400"></canvas>
+                <div class="snake-score">Score: <span id="snake-score">0</span></div>
+                <div class="snake-controls">
+                    <button id="snake-start">Start Game</button>
+                    <button id="snake-reset">Reset</button>
+                </div>
+                <p>Use arrow keys to control the snake. Eat the red food to grow!</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-modal" id="tic-tac-toe-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Tic Tac Toe</h2>
+            <div class="game-display" id="tic-tac-toe">
+                <div class="tic-tac-toe-status" id="tic-tac-toe-status">Your turn (X)</div>
+                <div class="tic-tac-toe-board" id="tic-tac-toe-board">
+                    <div class="tic-tac-toe-cell" data-index="0"></div>
+                    <div class="tic-tac-toe-cell" data-index="1"></div>
+                    <div class="tic-tac-toe-cell" data-index="2"></div>
+                    <div class="tic-tac-toe-cell" data-index="3"></div>
+                    <div class="tic-tac-toe-cell" data-index="4"></div>
+                    <div class="tic-tac-toe-cell" data-index="5"></div>
+                    <div class="tic-tac-toe-cell" data-index="6"></div>
+                    <div class="tic-tac-toe-cell" data-index="7"></div>
+                    <div class="tic-tac-toe-cell" data-index="8"></div>
+                </div>
+                <button class="tic-tac-toe-reset" id="tic-tac-toe-reset">Reset Game</button>
+                <div style="margin-top: 1rem;">
+                    <label for="tic-tac-toe-mode">Game Mode:</label>
+                    <select id="tic-tac-toe-mode">
+                        <option value="single">Single Player (vs Computer)</option>
+                        <option value="multi">Two Players</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-modal" id="memory-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Memory Card Game</h2>
+            <div class="game-display" id="memory-game">
+                <div class="memory-stats">
+                    <div>Moves: <span id="memory-moves">0</span></div>
+                    <div>Pairs Found: <span id="memory-pairs">0</span>/8</div>
+                </div>
+                <div class="memory-board" id="memory-board"></div>
+                <button id="memory-reset" style="padding: 0.5rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 1rem;">Reset Game</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-modal" id="typing-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Speed Typing Challenge</h2>
+            <div class="game-display" id="typing-game">
+                <div class="typing-display" id="typing-display"></div>
+                <input type="text" class="typing-input" id="typing-input" placeholder="Start typing here...">
+                <div class="typing-stats">
+                    <div>Time: <span id="typing-time">0</span>s</div>
+                    <div>WPM: <span id="typing-wpm">0</span></div>
+                    <div>Accuracy: <span id="typing-accuracy">0</span>%</div>
+                </div>
+                <button id="typing-reset" style="padding: 0.5rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 1rem;">New Text</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-modal" id="space-invaders-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Space Invaders</h2>
+            <div class="game-display" id="space-invaders">
+                <canvas id="space-canvas" width="400" height="500"></canvas>
+                <div class="space-score">Score: <span id="space-score">0</span></div>
+                <div class="space-controls">
+                    <button id="space-start">Start Game</button>
+                    <button id="space-reset">Reset</button>
+                </div>
+                <p>Use arrow keys to move and spacebar to shoot. Destroy all invaders!</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-modal" id="hangman-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Hangman</h2>
+            <div class="game-display" id="hangman-game">
+                <div class="hangman-image" id="hangman-image">
+  _______
+  |/      |
+  |      
+  |      
+  |       
+  |      
+  |
+__|__
+                </div>
+                <div class="hangman-display" id="hangman-word"></div>
+                <div class="hangman-keyboard" id="hangman-keyboard"></div>
+                <div style="margin-top: 1rem;">
+                    <div>Lives left: <span id="hangman-lives">6</span></div>
+                    <div>Category: <span id="hangman-category">General</span></div>
+                </div>
+                <button class="hangman-reset" id="hangman-reset">New Game</button>
+                <div style="margin-top: 1rem;">
+                    <label for="hangman-difficulty">Difficulty:</label>
+                    <select id="hangman-difficulty">
+                        <option value="easy">Easy (Common Words)</option>
+                        <option value="medium">Medium (General Knowledge)</option>
+                        <option value="hard">Hard (Technical Terms)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-modal" id="multiplayer-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Multiplayer Lobby</h2>
+            <div class="game-display">
+                <div class="multiplayer-lobby">
+                    <h3>Available Rooms</h3>
+                    <div class="lobby-rooms" id="lobby-rooms">
+                        <!-- Rooms will be added dynamically -->
+                    </div>
+                    <button class="create-room" id="create-room">Create New Room</button>
+                    <p style="margin-top: 2rem; text-align: center;">Note: This is a simulation. In a real implementation, this would connect to a multiplayer server.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        // Global variables
+        let currentGame = null;
+        let notificationTimeout = null;
+        
+        // DOM Elements
+        const gameCards = document.querySelectorAll('.game-card');
+        const gameModals = document.querySelectorAll('.game-modal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        const notificationElement = document.getElementById('notification');
+        
+        // Initialize the website
+        function init() {
+            // Set up event listeners for game cards
+            gameCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const game = card.getAttribute('data-game');
+                    openGameModal(game);
+                });
+            });
+            
+            // Set up event listeners for close buttons
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', closeAllModals);
+            });
+            
+            // Close modal when clicking outside content
+            gameModals.forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeAllModals();
+                    }
+                });
+            });
+            
+            // Initialize all games
+            initSnakeGame();
+            initTicTacToe();
+            initMemoryGame();
+            initTypingGame();
+            initSpaceInvaders();
+            initHangman();
+            initMultiplayerLobby();
+            
+            // Show welcome notification
+            showNotification('Welcome to GameHub! Click any game to start playing.', 'success');
+        }
+        
+        // Open a specific game modal
+        function openGameModal(game) {
+            closeAllModals();
+            currentGame = game;
+            const modal = document.getElementById(`${game}-modal`);
+            modal.classList.add('active');
+            
+            // Reset the game when opening (in case it was played before)
+            if (typeof window[`reset${game.charAt(0).toUpperCase() + game.slice(1)}Game`] === 'function') {
+                window[`reset${game.charAt(0).toUpperCase() + game.slice(1)}Game`]();
+            }
+        }
+        
+        // Close all game modals
+        function closeAllModals() {
+            gameModals.forEach(modal => {
+                modal.classList.remove('active');
+            });
+            currentGame = null;
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            notificationElement.textContent = message;
+            notificationElement.className = 'notification';
+            notificationElement.classList.add(type, 'show');
+            
+            if (notificationTimeout) {
+                clearTimeout(notificationTimeout);
+            }
+            
+            notificationTimeout = setTimeout(() => {
+                notificationElement.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Snake Game
+        function initSnakeGame() {
+            const canvas = document.getElementById('snake-canvas');
+            const ctx = canvas.getContext('2d');
+            const startButton = document.getElementById('snake-start');
+            const resetButton = document.getElementById('snake-reset');
+            const scoreElement = document.getElementById('snake-score');
+            
+            let snake = [];
+            let food = {};
+            let direction = 'right';
+            let nextDirection = 'right';
+            let gameInterval;
+            let score = 0;
+            let gameRunning = false;
+            
+            // Initialize game
+            function initGame() {
+                snake = [
+                    {x: 200, y: 200},
+                    {x: 190, y: 200},
+                    {x: 180, y: 200},
+                    {x: 170, y: 200},
+                    {x: 160, y: 200}
+                ];
+                
+                direction = 'right';
+                nextDirection = 'right';
+                score = 0;
+                scoreElement.textContent = score;
+                
+                createFood();
+                draw();
+            }
+            
+            // Start game
+            function startGame() {
+                if (gameRunning) return;
+                
+                gameRunning = true;
+                initGame();
+                gameInterval = setInterval(gameLoop, 100);
+                
+                startButton.textContent = 'Pause';
+                startButton.removeEventListener('click', startGame);
+                startButton.addEventListener('click', pauseGame);
+            }
+            
+            // Pause game
+            function pauseGame() {
+                gameRunning = false;
+                clearInterval(gameInterval);
+                startButton.textContent = 'Resume';
+                startButton.removeEventListener('click', pauseGame);
+                startButton.addEventListener('click', startGame);
+            }
+            
+            // Reset game
+            function resetGame() {
+                gameRunning = false;
+                clearInterval(gameInterval);
+                initGame();
+                startButton.textContent = 'Start Game';
+                startButton.removeEventListener('click', pauseGame);
+                startButton.addEventListener('click', startGame);
+            }
+            
+            // Game loop
+            function gameLoop() {
+                moveSnake();
+                checkCollision();
+                draw();
+            }
+            
+            // Move snake
+            function moveSnake() {
+                direction = nextDirection;
+                
+                const head = {x: snake[0].x, y: snake[0].y};
+                
+                switch (direction) {
+                    case 'up':
+                        head.y -= 10;
+                        break;
+                    case 'down':
+                        head.y += 10;
+                        break;
+                    case 'left':
+                        head.x -= 10;
+                        break;
+                    case 'right':
+                        head.x += 10;
+                        break;
+                }
+                
+                snake.unshift(head);
+                
+                // Check if snake ate food
+                if (head.x === food.x && head.y === food.y) {
+                    score += 10;
+                    scoreElement.textContent = score;
+                    createFood();
+                } else {
+                    snake.pop();
+                }
+            }
+            
+            // Check collision
+            function checkCollision() {
+                const head = snake[0];
+                
+                // Wall collision
+                if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                    gameOver();
+                    return;
+                }
+                
+                // Self collision
+                for (let i = 1; i < snake.length; i++) {
+                    if (head.x === snake[i].x && head.y === snake[i].y) {
+                        gameOver();
+                        return;
+                    }
+                }
+            }
+            
+            // Game over
+            function gameOver() {
+                gameRunning = false;
+                clearInterval(gameInterval);
+                showNotification(`Game Over! Your score: ${score}`, 'error');
+                startButton.textContent = 'Start Game';
+                startButton.removeEventListener('click', pauseGame);
+                startButton.addEventListener('click', startGame);
+            }
+            
+            // Create food
+            function createFood() {
+                food = {
+                    x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
+                    y: Math.floor(Math.random() * (canvas.height / 10)) * 10
+                };
+                
+                // Make sure food doesn't appear on snake
+                for (let segment of snake) {
+                    if (segment.x === food.x && segment.y === food.y) {
+                        return createFood();
+                    }
+                }
+            }
+            
+            // Draw game
+            function draw() {
+                // Clear canvas
+                ctx.fillStyle = '#f8f9fa';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw snake
+                snake.forEach((segment, index) => {
+                    if (index === 0) {
+                        ctx.fillStyle = '#00b894'; // Head color
+                    } else {
+                        ctx.fillStyle = '#6c5ce7'; // Body color
+                    }
+                    ctx.fillRect(segment.x, segment.y, 10, 10);
+                    
+                    // Add some styling
+                    ctx.strokeStyle = '#fff';
+                    ctx.strokeRect(segment.x, segment.y, 10, 10);
+                });
+                
+                // Draw food
+                ctx.fillStyle = '#d63031';
+                ctx.beginPath();
+                ctx.arc(food.x + 5, food.y + 5, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Keyboard controls
+            document.addEventListener('keydown', (e) => {
+                if (!gameRunning) return;
+                
+                switch (e.key) {
+                    case 'ArrowUp':
+                        if (direction !== 'down') nextDirection = 'up';
+                        break;
+                    case 'ArrowDown':
+                        if (direction !== 'up') nextDirection = 'down';
+                        break;
+                    case 'ArrowLeft':
+                        if (direction !== 'right') nextDirection = 'left';
+                        break;
+                    case 'ArrowRight':
+                        if (direction !== 'left') nextDirection = 'right';
+                        break;
+                }
+            });
+            
+            // Button event listeners
+            startButton.addEventListener('click', startGame);
+            resetButton.addEventListener('click', resetGame);
+            
+            // Initialize but don't start
+            initGame();
+        }
+        
+        // Tic Tac Toe Game
+        function initTicTacToe() {
+            const board = document.getElementById('tic-tac-toe-board');
+            const cells = document.querySelectorAll('.tic-tac-toe-cell');
+            const statusElement = document.getElementById('tic-tac-toe-status');
+            const resetButton = document.getElementById('tic-tac-toe-reset');
+            const modeSelect = document.getElementById('tic-tac-toe-mode');
+            
+            let boardState = ['', '', '', '', '', '', '', '', ''];
+            let currentPlayer = 'X';
+            let gameActive = true;
+            let vsComputer = true;
+            
+            // Winning conditions
+            const winningConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                [0, 4, 8], [2, 4, 6]             // diagonals
+            ];
+            
+            // Initialize game
+            function initGame() {
+                boardState = ['', '', '', '', '', '', '', '', ''];
+                currentPlayer = 'X';
+                gameActive = true;
+                vsComputer = modeSelect.value === 'single';
+                
+                statusElement.textContent = `Your turn (${currentPlayer})`;
+                
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.classList.remove('x', 'o');
+                });
+            }
+            
+            // Handle cell click
+            function handleCellClick(e) {
+                const clickedCell = e.target;
+                const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+                
+                // If cell already filled or game not active, ignore
+                if (boardState[clickedCellIndex] !== '' || !gameActive) {
+                    return;
+                }
+                
+                // Update board
+                updateBoard(clickedCell, clickedCellIndex);
+                
+                // Check for win or draw
+                checkResult();
+                
+                // Computer's turn if playing vs computer
+                if (vsComputer && gameActive && currentPlayer === 'O') {
+                    setTimeout(computerMove, 500);
+                }
+            }
+            
+            // Update board
+            function updateBoard(cell, index) {
+                boardState[index] = currentPlayer;
+                cell.textContent = currentPlayer;
+                cell.classList.add(currentPlayer.toLowerCase());
+            }
+            
+            // Change player
+            function changePlayer() {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                statusElement.textContent = vsComputer && currentPlayer === 'O' ? 
+                    "Computer's turn" : `Your turn (${currentPlayer})`;
+            }
+            
+            // Check for win or draw
+            function checkResult() {
+                let roundWon = false;
+                
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    
+                    if (boardState[a] === '' || boardState[b] === '' || boardState[c] === '') {
+                        continue;
+                    }
+                    
+                    if (boardState[a] === boardState[b] && boardState[b] === boardState[c]) {
+                        roundWon = true;
+                        break;
+                    }
+                }
+                
+                if (roundWon) {
+                    const winner = currentPlayer === 'X' ? (vsComputer ? 'You win!' : 'X wins!') : 
+                                  (vsComputer ? 'Computer wins!' : 'O wins!');
+                    statusElement.textContent = winner;
+                    gameActive = false;
+                    showNotification(winner, roundWon ? 'success' : 'error');
+                    return;
+                }
+                
+                // Check for draw
+                if (!boardState.includes('')) {
+                    statusElement.textContent = 'Game ended in a draw!';
+                    gameActive = false;
+                    showNotification('Game ended in a draw!', 'error');
+                    return;
+                }
+                
+                // Continue game
+                changePlayer();
+            }
+            
+            // Computer move
+            function computerMove() {
+                // Simple AI - first try to win, then block, then random
+                let move = findWinningMove('O') || findWinningMove('X') || findRandomMove();
+                
+                if (move !== null) {
+                    const cell = cells[move];
+                    updateBoard(cell, move);
+                    checkResult();
+                }
+            }
+            
+            // Find winning move
+            function findWinningMove(player) {
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    const cells = [boardState[a], boardState[b], boardState[c]];
+                    
+                    // Count player marks and empty cells
+                    const playerCount = cells.filter(cell => cell === player).length;
+                    const emptyCount = cells.filter(cell => cell === '').length;
+                    
+                    if (playerCount === 2 && emptyCount === 1) {
+                        // Return the empty cell index
+                        if (boardState[a] === '') return a;
+                        if (boardState[b] === '') return b;
+                        if (boardState[c] === '') return c;
+                    }
+                }
+                return null;
+            }
+            
+            // Find random move
+            function findRandomMove() {
+                const emptyCells = boardState.reduce((acc, cell, index) => {
+                    if (cell === '') acc.push(index);
+                    return acc;
+                }, []);
+                
+                return emptyCells.length > 0 ? 
+                    emptyCells[Math.floor(Math.random() * emptyCells.length)] : null;
+            }
+            
+            // Event listeners
+            cells.forEach(cell => {
+                cell.addEventListener('click', handleCellClick);
+            });
+            
+            resetButton.addEventListener('click', initGame);
+            modeSelect.addEventListener('change', initGame);
+            
+            // Initialize game
+            initGame();
+        }
+        
+        // Memory Game
+        function initMemoryGame() {
+            const board = document.getElementById('memory-board');
+            const movesElement = document.getElementById('memory-moves');
+            const pairsElement = document.getElementById('memory-pairs');
+            const resetButton = document.getElementById('memory-reset');
+            
+            const emojis = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+            let cards = [];
+            let flippedCards = [];
+            let matchedPairs = 0;
+            let moves = 0;
+            let canFlip = true;
+            
+            // Initialize game
+            function initGame() {
+                // Create pairs of cards
+                cards = [...emojis, ...emojis];
+                
+                // Shuffle cards
+                for (let i = cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [cards[i], cards[j]] = [cards[j], cards[i]];
+                }
+                
+                // Reset game state
+                flippedCards = [];
+                matchedPairs = 0;
+                moves = 0;
+                canFlip = true;
+                
+                // Update UI
+                movesElement.textContent = moves;
+                pairsElement.textContent = `${matchedPairs}/${emojis.length}`;
+                
+                // Create board
+                board.innerHTML = '';
+                cards.forEach((emoji, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card';
+                    card.setAttribute('data-index', index);
+                    card.textContent = emoji;
+                    card.addEventListener('click', flipCard);
+                    board.appendChild(card);
+                });
+            }
+            
+            // Flip card
+            function flipCard(e) {
+                if (!canFlip) return;
+                
+                const card = e.target.closest('.memory-card');
+                const index = parseInt(card.getAttribute('data-index'));
+                
+                // Don't flip if already flipped or matched
+                if (card.classList.contains('flipped') || card.classList.contains('matched')) {
+                    return;
+                }
+                
+                // Flip the card
+                card.classList.add('flipped');
+                flippedCards.push({card, index});
+                
+                // Check for match if two cards are flipped
+                if (flippedCards.length === 2) {
+                    canFlip = false;
+                    moves++;
+                    movesElement.textContent = moves;
+                    
+                    const [card1, card2] = flippedCards;
+                    
+                    if (cards[card1.index] === cards[card2.index]) {
+                        // Match found
+                        card1.card.classList.add('matched');
+                        card2.card.classList.add('matched');
+                        matchedPairs++;
+                        pairsElement.textContent = `${matchedPairs}/${emojis.length}`;
+                        flippedCards = [];
+                        canFlip = true;
+                        
+                        // Check if game is won
+                        if (matchedPairs === emojis.length) {
+                            showNotification(`You won in ${moves} moves!`, 'success');
+                        }
+                    } else {
+                        // No match - flip back after delay
+                        setTimeout(() => {
+                            card1.card.classList.remove('flipped');
+                            card2.card.classList.remove('flipped');
+                            flippedCards = [];
+                            canFlip = true;
+                        }, 1000);
+                    }
+                }
+            }
+            
+            // Event listeners
+            resetButton.addEventListener('click', initGame);
+            
+            // Initialize game
+            initGame();
+        }
+        
+        // Typing Game
+        function initTypingGame() {
+            const displayElement = document.getElementById('typing-display');
+            const inputElement = document.getElementById('typing-input');
+            const timeElement = document.getElementById('typing-time');
+            const wpmElement = document.getElementById('typing-wpm');
+            const accuracyElement = document.getElementById('typing-accuracy');
+            const resetButton = document.getElementById('typing-reset');
+            
+            let currentText = '';
+            let startTime = null;
+            let timerInterval = null;
+            let correctChars = 0;
+            let totalChars = 0;
+            
+            // Sample texts by difficulty
+            const sampleTexts = [
+                "The quick brown fox jumps over the lazy dog.",
+                "Programming is the process of creating a set of instructions that tell a computer how to perform a task.",
+                "The most disastrous thing that you can ever learn is your first programming language.",
+                "JavaScript is a high-level, often just-in-time compiled language that conforms to the ECMAScript standard.",
+                "The best way to predict the future is to invent it. - Alan Kay",
+                "Computer science is no more about computers than astronomy is about telescopes. - Edsger Dijkstra"
+            ];
+            
+            // Initialize game
+            function initGame() {
+                // Get random text
+                currentText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
+                
+                // Reset stats
+                correctChars = 0;
+                totalChars = 0;
+                startTime = null;
+                
+                // Clear timer
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                
+                // Update UI
+                displayElement.innerHTML = '';
+                currentText.split('').forEach(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    displayElement.appendChild(span);
+                });
+                
+                inputElement.value = '';
+                timeElement.textContent = '0';
+                wpmElement.textContent = '0';
+                accuracyElement.textContent = '0';
+                
+                // Focus input
+                inputElement.focus();
+            }
+            
+            // Start timer
+            function startTimer() {
+                if (startTime !== null) return;
+                
+                startTime = new Date();
+                timerInterval = setInterval(updateTimer, 100);
+            }
+            
+            // Update timer
+            function updateTimer() {
+                const currentTime = new Date();
+                const elapsed = (currentTime - startTime) / 1000;
+                timeElement.textContent = elapsed.toFixed(1);
+                
+                // Calculate WPM (average word length is 5 characters)
+                if (correctChars > 0) {
+                    const minutes = elapsed / 60;
+                    const words = correctChars / 5;
+                    const wpm = Math.round(words / minutes);
+                    wpmElement.textContent = wpm;
+                }
+            }
+            
+            // Handle input
+            function handleInput() {
+                startTimer();
+                
+                const inputText = inputElement.value;
+                totalChars = inputText.length;
+                
+                // Reset display
+                Array.from(displayElement.children).forEach((span, index) => {
+                    span.className = '';
+                    
+                    if (index < inputText.length) {
+                        if (inputText[index] === currentText[index]) {
+                            span.classList.add('typing-correct');
+                            correctChars++;
+                        } else {
+                            span.classList.add('typing-incorrect');
+                        }
+                    }
+                });
+                
+                // Calculate accuracy
+                if (totalChars > 0) {
+                    const accuracy = Math.round((correctChars / totalChars) * 100);
+                    accuracyElement.textContent = accuracy;
+                }
+                
+                // Check if text is completed
+                if (inputText === currentText) {
+                    clearInterval(timerInterval);
+                    const elapsed = (new Date() - startTime) / 1000;
+                    const minutes = elapsed / 60;
+                    const words = currentText.split(' ').length;
+                    const wpm = Math.round(words / minutes);
+                    
+                    showNotification(`Completed! Your speed: ${wpm} WPM, Accuracy: ${Math.round((correctChars / totalChars) * 100)}%`, 'success');
+                }
+            }
+            
+            // Event listeners
+            inputElement.addEventListener('input', handleInput);
+            resetButton.addEventListener('click', initGame);
+            
+            // Initialize game
+            initGame();
+        }
+        
+        // Space Invaders Game
+        function initSpaceInvaders() {
+            const canvas = document.getElementById('space-canvas');
+            const ctx = canvas.getContext('2d');
+            const startButton = document.getElementById('space-start');
+            const resetButton = document.getElementById('space-reset');
+            const scoreElement = document.getElementById('space-score');
+            
+            // Game elements
+            let player = {
+                x: canvas.width / 2 - 25,
+                y: canvas.height - 60,
+                width: 50,
+                height: 50,
+                speed: 5,
+                color: '#6c5ce7'
+            };
+            
+            let bullets = [];
+            let invaders = [];
+            let invaderDirection = 1;
+            let invaderSpeed = 1;
+            let lastInvaderMove = 0;
+            let invaderMoveDelay = 1000; // ms
+            let score = 0;
+            let gameRunning = false;
+            let gameInterval;
+            let animationFrame;
+            
+            // Initialize game
+            function initGame() {
+                player = {
+                    x: canvas.width / 2 - 25,
+                    y: canvas.height - 60,
+                    width: 50,
+                    height: 50,
+                    speed: 5,
+                    color: '#6c5ce7'
+                };
+                
+                bullets = [];
+                invaders = [];
+                invaderDirection = 1;
+                invaderSpeed = 1;
+                score = 0;
+                scoreElement.textContent = score;
+                
+                // Create invaders
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        invaders.push({
+                            x: 50 + col * 50,
+                            y: 50 + row * 40,
+                            width: 40,
+                            height: 30,
+                            color: row === 0 ? '#fd79a8' : 
+                                  row === 1 ? '#a29bfe' : 
+                                  row === 2 ? '#00b894' : '#fdcb6e'
+                        });
+                    }
+                }
+                
+                draw();
+            }
+            
+            // Start game
+            function startGame() {
+                if (gameRunning) return;
+                
+                gameRunning = true;
+                initGame();
+                lastInvaderMove = Date.now();
+                gameInterval = setInterval(gameLoop, 16);
+                
+                startButton.textContent = 'Pause';
+                startButton.removeEventListener('click', startGame);
+                startButton.addEventListener('click', pauseGame);
+            }
+            
+            // Pause game
+            function pauseGame() {
+                gameRunning = false;
+                clearInterval(gameInterval);
+                cancelAnimationFrame(animationFrame);
+                startButton.textContent = 'Resume';
+                startButton.removeEventListener('click', pauseGame);
+                startButton.addEventListener('click', startGame);
+            }
+            
+            // Reset game
+            function resetGame() {
+                gameRunning = false;
+                clearInterval(gameInterval);
+                cancelAnimationFrame(animationFrame);
+                initGame();
+                startButton.textContent = 'Start Game';
+                startButton.removeEventListener('click', pauseGame);
+                startButton.addEventListener('click', startGame);
+            }
+            
+            // Game loop
+            function gameLoop() {
+                update();
+                draw();
+            }
+            
+            // Update game state
+            function update() {
+                // Move bullets
+                bullets = bullets.filter(bullet => {
+                    bullet.y -= 5;
+                    return bullet.y > 0;
+                });
+                
+                // Move invaders
+                const now = Date.now();
+                if (now - lastInvaderMove > invaderMoveDelay) {
+                    let shouldMoveDown = false;
+                    
+                    // Check if any invader hits the edge
+                    for (let invader of invaders) {
+                        if ((invader.x + invader.width + invaderSpeed * invaderDirection > canvas.width) ||
+                            (invader.x + invaderSpeed * invaderDirection < 0)) {
+                            shouldMoveDown = true;
+                            break;
+                        }
+                    }
+                    
+                    if (shouldMoveDown) {
+                        invaderDirection *= -1;
+                        for (let invader of invaders) {
+                            invader.y += 20;
+                            
+                            // Check if invaders reached bottom
+                            if (invader.y + invader.height > player.y) {
+                                gameOver();
+                                return;
+                            }
+                        }
+                    } else {
+                        for (let invader of invaders) {
+                            invader.x += invaderSpeed * invaderDirection;
+                        }
+                    }
+                    
+                    lastInvaderMove = now;
+                    
+                    // Increase speed as invaders are eliminated
+                    invaderSpeed = 1 + (40 - invaders.length) * 0.05;
+                    invaderMoveDelay = Math.max(200, 1000 - (40 - invaders.length) * 20);
+                }
+                
+                // Check bullet-invader collisions
+                for (let i = bullets.length - 1; i >= 0; i--) {
+                    const bullet = bullets[i];
+                    
+                    for (let j = invaders.length - 1; j >= 0; j--) {
+                        const invader = invaders[j];
+                        
+                        if (bullet.x < invader.x + invader.width &&
+                            bullet.x + bullet.width > invader.x &&
+                            bullet.y < invader.y + invader.height &&
+                            bullet.y + bullet.height > invader.y) {
+                            
+                            // Remove bullet and invader
+                            bullets.splice(i, 1);
+                            invaders.splice(j, 1);
+                            score += 10;
+                            scoreElement.textContent = score;
+                            
+                            // Check if all invaders are gone
+                            if (invaders.length === 0) {
+                                gameWin();
+                            }
+                            
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Draw game
+            function draw() {
+                // Clear canvas
+                ctx.fillStyle = '#111';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw player
+                ctx.fillStyle = player.color;
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+                
+                // Draw player as a ship
+                ctx.beginPath();
+                ctx.moveTo(player.x + player.width / 2, player.y);
+                ctx.lineTo(player.x, player.y + player.height);
+                ctx.lineTo(player.x + player.width, player.y + player.height);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Draw bullets
+                ctx.fillStyle = '#fff';
+                bullets.forEach(bullet => {
+                    ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+                });
+                
+                // Draw invaders
+                invaders.forEach(invader => {
+                    ctx.fillStyle = invader.color;
+                    ctx.fillRect(invader.x, invader.y, invader.width, invader.height);
+                    
+                    // Draw invader eyes
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(invader.x + 10, invader.y + 10, 5, 5);
+                    ctx.fillRect(invader.x + 25, invader.y + 10, 5, 5);
+                });
+            }
+            
+            // Fire bullet
+            function fireBullet() {
+                if (!gameRunning) return;
+                
+                bullets.push({
+                    x: player.x + player.width / 2 - 2.5,
+                    y: player.y,
+                    width: 5,
+                    height: 10,
+                    color: '#fff'
+                });
+            }
+            
+            // Game over
+            function gameOver() {
+                gameRunning = false;
+                clearInterval(gameInterval);
+                showNotification(`Game Over! Your score: ${score}`, 'error');
+                startButton.textContent = 'Start Game';
+                startButton.removeEventListener('click', pauseGame);
+                startButton.addEventListener('click', startGame);
+            }
+            
+            // Game win
+            function gameWin() {
+                gameRunning = false;
+                clearInterval(gameInterval);
+                showNotification(`You Win! Your score: ${score}`, 'success');
+                startButton.textContent = 'Start Game';
+                startButton.removeEventListener('click', pauseGame);
+                startButton.addEventListener('click', startGame);
+            }
+            
+            // Keyboard controls
+            document.addEventListener('keydown', (e) => {
+                if (!gameRunning) return;
+                
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        player.x = Math.max(0, player.x - player.speed);
+                        break;
+                    case 'ArrowRight':
+                        player.x = Math.min(canvas.width - player.width, player.x + player.speed);
+                        break;
+                    case ' ':
+                        fireBullet();
+                        break;
+                }
+            });
+            
+            // Button event listeners
+            startButton.addEventListener('click', startGame);
+            resetButton.addEventListener('click', resetGame);
+            
+            // Initialize but don't start
+            initGame();
+        }
+        
+        // Hangman Game
+        function initHangman() {
+            const wordDisplay = document.getElementById('hangman-word');
+            const keyboard = document.getElementById('hangman-keyboard');
+            const hangmanImage = document.getElementById('hangman-image');
+            const livesDisplay = document.getElementById('hangman-lives');
+            const categoryDisplay = document.getElementById('hangman-category');
+            const resetButton = document.getElementById('hangman-reset');
+            const difficultySelect = document.getElementById('hangman-difficulty');
+            
+            // Word categories by difficulty
+            const wordCategories = {
+                easy: {
+                    category: "Common Words",
+                    words: ["APPLE", "HOUSE", "SUNNY", "WATER", "MUSIC", "HAPPY", "LIGHT", "PHONE", "TABLE", "WOMAN"]
+                },
+                medium: {
+                    category: "General Knowledge",
+                    words: ["ELEPHANT", "MOUNTAIN", "COMPUTER", "BICYCLE", "LIBRARY", "HOSPITAL", "AIRPORT", "TELEVISION", "BREAKFAST", "CALENDAR"]
+                },
+                hard: {
+                    category: "Technical Terms",
+                    words: ["ALGORITHM", "DATABASE", "FUNCTION", "VARIABLE", "NETWORK", "INTERFACE", "ENCRYPTION", "PROTOCOL", "FRAMEWORK", "SYNTAX"]
+                }
+            };
+            
+            let currentWord = '';
+            let guessedLetters = [];
+            let lives = 6;
+            let gameOver = false;
+            
+            // Initialize game
+            function initGame() {
+                const difficulty = difficultySelect.value;
+                const category = wordCategories[difficulty];
+                
+                // Select random word
+                currentWord = category.words[Math.floor(Math.random() * category.words.length)];
+                guessedLetters = [];
+                lives = 6;
+                gameOver = false;
+                
+                // Update UI
+                updateWordDisplay();
+                updateKeyboard();
+                updateHangmanImage();
+                livesDisplay.textContent = lives;
+                categoryDisplay.textContent = category.category;
+            }
+            
+            // Update word display
+            function updateWordDisplay() {
+                wordDisplay.innerHTML = '';
+                
+                currentWord.split('').forEach(letter => {
+                    const span = document.createElement('span');
+                    span.textContent = guessedLetters.includes(letter) ? letter : '_';
+                    span.style.margin = '0 5px';
+                    span.style.fontSize = '2rem';
+                    wordDisplay.appendChild(span);
+                });
+                
+                // Check if word is complete
+                if (Array.from(currentWord).every(letter => guessedLetters.includes(letter))) {
+                    gameOver = true;
+                    showNotification('Congratulations! You won!', 'success');
+                }
+            }
+            
+            // Update keyboard
+            function updateKeyboard() {
+                keyboard.innerHTML = '';
+                
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+                    const button = document.createElement('button');
+                    button.className = 'hangman-key';
+                    button.textContent = letter;
+                    button.disabled = guessedLetters.includes(letter) || gameOver;
+                    
+                    if (guessedLetters.includes(letter)) {
+                        if (currentWord.includes(letter)) {
+                            button.classList.add('used', 'correct');
+                        } else {
+                            button.classList.add('used', 'incorrect');
+                        }
+                    }
+                    
+                    button.addEventListener('click', () => guessLetter(letter));
+                    keyboard.appendChild(button);
+                });
+            }
+            
+            // Update hangman image
+            function updateHangmanImage() {
+                const stages = [
+`
+  _______
+  |/      |
+  |      
+  |      
+  |       
+  |      
+  |
+__|__
+`,
+`
+  _______
+  |/      |
+  |      (_)
+  |      
+  |       
+  |      
+  |
+__|__
+`,
+`
+  _______
+  |/      |
+  |      (_)
+  |       |
+  |       |
+  |      
+  |
+__|__
+`,
+`
+  _______
+  |/      |
+  |      (_)
+  |      \\|
+  |       |
+  |      
+  |
+__|__
+`,
+`
+  _______
+  |/      |
+  |      (_)
+  |      \\|/
+  |       |
+  |      
+  |
+__|__
+`,
+`
+  _______
+  |/      |
+  |      (_)
+  |      \\|/
+  |       |
+  |      / 
+  |
+__|__
+`,
+`
+  _______
+  |/      |
+  |      (_)
+  |      \\|/
+  |       |
+  |      / \\
+  |
+__|__
+`
+                ];
+                
+                hangmanImage.textContent = stages[6 - lives];
+            }
+            
+            // Guess letter
+            function guessLetter(letter) {
+                if (gameOver) return;
+                
+                guessedLetters.push(letter);
+                
+                if (!currentWord.includes(letter)) {
+                    lives--;
+                    livesDisplay.textContent = lives;
+                    updateHangmanImage();
+                    
+                    if (lives === 0) {
+                        gameOver = true;
+                        showNotification(`Game Over! The word was: ${currentWord}`, 'error');
+                        updateWordDisplay(); // Reveal the word
+                    }
+                }
+                
+                updateWordDisplay();
+                updateKeyboard();
+            }
+            
+            // Event listeners
+            resetButton.addEventListener('click', initGame);
+            difficultySelect.addEventListener('change', initGame);
+            
+            // Initialize game
+            initGame();
+        }
+        
+        // Multiplayer Lobby
+        function initMultiplayerLobby() {
+            const lobbyRooms = document.getElementById('lobby-rooms');
+            const createRoomButton = document.getElementById('create-room');
+            
+            // Sample rooms data
+            const sampleRooms = [
+                { id: 1, name: "Tic Tac Toe Tournament", game: "tic-tac-toe", players: 4, maxPlayers: 8 },
+                { id: 2, name: "Memory Masters", game: "memory", players: 2, maxPlayers: 4 },
+                { id: 3, name: "Typing Race", game: "typing", players: 3, maxPlayers: 10 },
+                { id: 4, name: "Snake Battle", game: "snake", players: 1, maxPlayers: 2 }
+            ];
+            
+            // Initialize lobby
+            function initLobby() {
+                lobbyRooms.innerHTML = '';
+                
+                sampleRooms.forEach(room => {
+                    const roomCard = document.createElement('div');
+                    roomCard.className = 'room-card';
+                    roomCard.innerHTML = `
+                        <h4>${room.name}</h4>
+                        <p>Game: ${room.game.replace('-', ' ').toUpperCase()}</p>
+                        <p>Players: ${room.players}/${room.maxPlayers}</p>
+                    `;
+                    roomCard.addEventListener('click', () => joinRoom(room));
+                    lobbyRooms.appendChild(roomCard);
+                });
+            }
+            
+            // Join room
+            function joinRoom(room) {
+                showNotification(`Joining ${room.name}... (Simulation)`, 'success');
+            }
+            
+            // Create room
+            function createRoom() {
+                const roomName = prompt("Enter room name:");
+                if (roomName) {
+                    showNotification(`Created room: ${roomName} (Simulation)`, 'success');
+                }
+            }
+            
+            // Event listeners
+            createRoomButton.addEventListener('click', createRoom);
+            
+            // Initialize lobby
+            initLobby();
+        }
+        
+        // Initialize the website when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
